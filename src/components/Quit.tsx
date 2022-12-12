@@ -23,6 +23,13 @@ const Quit: React.FC<PropsType> = ({ nowScore }) => {
       borderRadius="100%"
       fontSize="25px"
       onClick={quit}
+      css={{
+        "@media (max-width: 400px)": {
+          width: "70px",
+          height: "70px",
+          fontSize: "20px",
+        },
+      }}
     >
       Quit
     </Button>
