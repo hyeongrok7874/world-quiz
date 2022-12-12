@@ -79,6 +79,11 @@ const Flag: NextPage<FlagType> = ({ countries }) => {
           justifyContent="center"
           flexDir="column"
           position="relative"
+          css={{
+            "@media (max-width: 600px": {
+              width: "100%",
+            },
+          }}
         >
           <Text
             position="absolute"
@@ -87,6 +92,11 @@ const Flag: NextPage<FlagType> = ({ countries }) => {
             color="#8675A9"
             fontSize="30px"
             fontWeight="700"
+            css={{
+              "@media (max-width: 400px)": {
+                fontSize: "20px",
+              },
+            }}
           >
             Score : {correctCount}
           </Text>
@@ -97,18 +107,38 @@ const Flag: NextPage<FlagType> = ({ countries }) => {
             color="#8675A9"
             fontSize="30px"
             fontWeight="700"
+            css={{
+              "@media (max-width: 400px)": {
+                fontSize: "20px",
+              },
+            }}
           >
             Best Score : {bestScore}
           </Text>
-          <Heading color="#8675A9" mb="30px">
+          <Heading
+            color="#8675A9"
+            mb="30px"
+            css={{
+              "@media (max-width: 400px)": {
+                fontSize: "25px",
+              },
+              "@media (max-width: 350px)": {
+                fontSize: "20px",
+              },
+            }}
+          >
             {"What's the correct answer?"}
           </Heading>
           {answer ? (
             <Image
               width="400px"
-              height="300px"
               alt="flag"
               src={`https://flagcdn.com/${answer?.code.toLowerCase()}.svg`}
+              css={{
+                "@media (max-width: 600px)": {
+                  width: "85%",
+                },
+              }}
             />
           ) : (
             <Flex
