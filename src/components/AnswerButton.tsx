@@ -1,19 +1,21 @@
 import { Button, useToast } from "@chakra-ui/react";
-import { NextPage } from "next";
 import { Dispatch, SetStateAction } from "react";
 
 interface PropsType {
   name: string;
   correct: boolean;
   setCorrectCount: Dispatch<SetStateAction<number>>;
+  getNewAnswer: () => void;
 }
 
-const AnswerButton: NextPage<PropsType> = ({
+const AnswerButton: React.FC<PropsType> = ({
   name,
   correct,
   setCorrectCount,
+  getNewAnswer,
 }) => {
   const toast = useToast();
+
   const clinkFunc = () => {
     correct
       ? (toast({
@@ -23,7 +25,8 @@ const AnswerButton: NextPage<PropsType> = ({
           duration: 3000,
           isClosable: true,
         }),
-        setCorrectCount((prev) => prev + 1))
+        setCorrectCount((prev) => prev + 1),
+        getNewAnswer())
       : (toast({
           position: "top-right",
           title: "오답",
@@ -33,6 +36,7 @@ const AnswerButton: NextPage<PropsType> = ({
         }),
         setCorrectCount((prev) => (prev < 1 ? prev : prev - 1)));
   };
+
   return (
     <Button
       w="400px"
@@ -42,6 +46,7 @@ const AnswerButton: NextPage<PropsType> = ({
       fontSize="30px"
       m="20px 0"
       onClick={clinkFunc}
+      overflowX="hidden"
     >
       {name}
     </Button>
