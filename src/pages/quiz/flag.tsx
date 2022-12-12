@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import { Text, Flex, Image, Heading } from "@chakra-ui/react";
 import { AnswerButton } from "components";
+import Quit from "components/Quit";
 import { GetStaticProps, NextPage } from "next";
 import { useEffect, useState } from "react";
 import client from "utils/client";
@@ -27,33 +28,41 @@ const Flag: NextPage<FlagType> = ({ countries }) => {
   const [answer, setAnswer] = useState<CountryType>();
   const [example, setExample] = useState<CountryType[]>([]);
   const [correctCount, setCorrectCount] = useState<number>(0);
-  const indexArray: number[] = [];
+  const [bestScore, setBestScore] = useState<number>(0);
+
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * countries.length);
-    setAnswer(countries[randomIndex]);
-    setExample([countries[randomIndex]]);
+    setBestScore(parseInt(localStorage.getItem("bestScore") ?? "0"));
+    getNewAnswer();
   }, []);
 
   useEffect(() => {
     getRandomIndex();
   }, [answer]);
 
+  const getNewAnswer = () => {
+    const randomIndex = Math.floor(Math.random() * countries.length);
+    setAnswer(countries[randomIndex]);
+    setExample([countries[randomIndex]]);
+  };
+
   const getRandomIndex = () => {
     if (answer) {
+      const indexArray: number[] = [];
       while (indexArray.length < 3) {
         const exampleIndex = Math.floor(Math.random() * countries.length);
         const exampleCode = countries[exampleIndex].code;
         if (
           answer?.code !== exampleCode &&
-          !example.map((exam) => exam.code).includes(exampleCode)
+          !indexArray.includes(exampleIndex)
         ) {
           indexArray.push(exampleIndex);
         }
       }
-      return setExample([
-        ...example,
-        ...indexArray.map((index) => countries[index]),
-      ]);
+      return setExample(
+        [...example, ...indexArray.map((index) => countries[index])].sort(
+          () => Math.random() - 0.5
+        )
+      );
     } else {
       return;
     }
@@ -78,10 +87,20 @@ const Flag: NextPage<FlagType> = ({ countries }) => {
           fontSize="30px"
           fontWeight="700"
         >
-          {correctCount} 점
+          Score : {correctCount}
+        </Text>
+        <Text
+          position="absolute"
+          right="10px"
+          top="10px"
+          color="#8675A9"
+          fontSize="30px"
+          fontWeight="700"
+        >
+          Best Score : {bestScore}
         </Text>
         <Heading color="#8675A9" mb="30px">
-          무엇이 정답일까요?
+          {"What's the correct answer?"}
         </Heading>
         {answer ? (
           <Image
@@ -91,20 +110,27 @@ const Flag: NextPage<FlagType> = ({ countries }) => {
             src={`https://flagcdn.com/${answer?.code.toLowerCase()}.svg`}
           />
         ) : (
-          <Text fontSize="40px" fontWeight="700" color="#C3AED6">
-            잠시만요...
-          </Text>
+          <Flex
+            width="400px"
+            height="300px"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Text fontSize="40px" fontWeight="700" color="#C3AED6">
+              Wait...
+            </Text>
+          </Flex>
         )}
-        {example
-          .sort(() => Math.random() - 0.5)
-          .map((country, index) => (
-            <AnswerButton
-              key={index}
-              correct={country.code === answer?.code}
-              name={country.name}
-              setCorrectCount={setCorrectCount}
-            />
-          ))}
+        {example.map((country, index) => (
+          <AnswerButton
+            key={index}
+            correct={country.code === answer?.code}
+            name={country.name}
+            setCorrectCount={setCorrectCount}
+            getNewAnswer={getNewAnswer}
+          />
+        ))}
+        <Quit nowScore={correctCount} />
       </Flex>
     </Flex>
   );
