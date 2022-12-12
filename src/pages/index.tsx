@@ -1,9 +1,16 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
 import Link from "next/link";
 import * as I from "Assets/svg";
+import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
+  const [bestScore, setBestScore] = useState<number>(0);
+
+  useEffect(() => {
+    setBestScore(parseInt(localStorage.getItem("bestScore") ?? "0"));
+  }, []);
+
   return (
     <Flex justifyContent="center">
       <Flex
@@ -15,6 +22,9 @@ const Home: NextPage = () => {
         justifyContent="center"
       >
         <I.Logo />
+        <Text fontSize="25px" fontWeight="500" mt="50px" color="#8675A9">
+          My Best Score : {bestScore}
+        </Text>
         <Link href="/quiz/flag" style={{ marginTop: "100px" }}>
           <I.StartIcon />
         </Link>
