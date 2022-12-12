@@ -1,7 +1,6 @@
 import { gql } from "@apollo/client";
 import { Text, Flex, Image, Heading } from "@chakra-ui/react";
-import { AnswerButton } from "components";
-import Quit from "components/Quit";
+import { AnswerButton, Helmet, Quit } from "components";
 import { GetStaticProps, NextPage } from "next";
 import { useEffect, useState } from "react";
 import client from "utils/client";
@@ -69,70 +68,73 @@ const Flag: NextPage<FlagType> = ({ countries }) => {
   };
 
   return (
-    <Flex justifyContent="center">
-      <Flex
-        w="600px"
-        h="100vh"
-        bg="#FDDCD6"
-        alignItems="center"
-        justifyContent="center"
-        flexDir="column"
-        position="relative"
-      >
-        <Text
-          position="absolute"
-          left="10px"
-          top="10px"
-          color="#8675A9"
-          fontSize="30px"
-          fontWeight="700"
+    <>
+      <Helmet title="world-quiz | flag" />
+      <Flex justifyContent="center">
+        <Flex
+          w="600px"
+          h="100vh"
+          bg="#FDDCD6"
+          alignItems="center"
+          justifyContent="center"
+          flexDir="column"
+          position="relative"
         >
-          Score : {correctCount}
-        </Text>
-        <Text
-          position="absolute"
-          right="10px"
-          top="10px"
-          color="#8675A9"
-          fontSize="30px"
-          fontWeight="700"
-        >
-          Best Score : {bestScore}
-        </Text>
-        <Heading color="#8675A9" mb="30px">
-          {"What's the correct answer?"}
-        </Heading>
-        {answer ? (
-          <Image
-            width="400px"
-            height="300px"
-            alt="flag"
-            src={`https://flagcdn.com/${answer?.code.toLowerCase()}.svg`}
-          />
-        ) : (
-          <Flex
-            width="400px"
-            height="300px"
-            justifyContent="center"
-            alignItems="center"
+          <Text
+            position="absolute"
+            left="10px"
+            top="10px"
+            color="#8675A9"
+            fontSize="30px"
+            fontWeight="700"
           >
-            <Text fontSize="40px" fontWeight="700" color="#C3AED6">
-              Wait...
-            </Text>
-          </Flex>
-        )}
-        {example.map((country, index) => (
-          <AnswerButton
-            key={index}
-            correct={country.code === answer?.code}
-            name={country.name}
-            setCorrectCount={setCorrectCount}
-            getNewAnswer={getNewAnswer}
-          />
-        ))}
-        <Quit nowScore={correctCount} />
+            Score : {correctCount}
+          </Text>
+          <Text
+            position="absolute"
+            right="10px"
+            top="10px"
+            color="#8675A9"
+            fontSize="30px"
+            fontWeight="700"
+          >
+            Best Score : {bestScore}
+          </Text>
+          <Heading color="#8675A9" mb="30px">
+            {"What's the correct answer?"}
+          </Heading>
+          {answer ? (
+            <Image
+              width="400px"
+              height="300px"
+              alt="flag"
+              src={`https://flagcdn.com/${answer?.code.toLowerCase()}.svg`}
+            />
+          ) : (
+            <Flex
+              width="400px"
+              height="300px"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Text fontSize="40px" fontWeight="700" color="#C3AED6">
+                Wait...
+              </Text>
+            </Flex>
+          )}
+          {example.map((country, index) => (
+            <AnswerButton
+              key={index}
+              correct={country.code === answer?.code}
+              name={country.name}
+              setCorrectCount={setCorrectCount}
+              getNewAnswer={getNewAnswer}
+            />
+          ))}
+          <Quit nowScore={correctCount} />
+        </Flex>
       </Flex>
-    </Flex>
+    </>
   );
 };
 
