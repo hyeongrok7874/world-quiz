@@ -47,6 +47,16 @@ const AnswerButton: React.FC<PropsType> = ({
       m="20px 0"
       onClick={clinkFunc}
       overflowX="hidden"
+      css={{
+        "@media (max-width: 600px)": {
+          width: "85%",
+        },
+        "@media (max-width: 450px)": {
+          height: "55px",
+          fontSize: "23px",
+          margin: "12px 0",
+        },
+      }}
     >
       {name}
     </Button>
