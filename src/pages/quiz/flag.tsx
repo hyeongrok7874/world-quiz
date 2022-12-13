@@ -24,6 +24,16 @@ interface CountryType {
   name: string;
 }
 
+interface TranslateType {
+  data: {
+    message: {
+      result: {
+        translatedText: string;
+      };
+    };
+  };
+}
+
 const Flag: NextPage<FlagType> = ({ countries }) => {
   const [answer, setAnswer] = useState<CountryType>();
   const [example, setExample] = useState<CountryType[]>([]);
@@ -180,7 +190,7 @@ const GET_COUNTRIES = gql`
 
 const translate = async (country: string): Promise<string> => {
   try {
-    const { data } = await axios.post(
+    const { data }: TranslateType = await axios.post(
       "https://openapi.naver.com/v1/papago/n2mt",
       {
         source: "en",
@@ -198,9 +208,9 @@ const translate = async (country: string): Promise<string> => {
       }
     );
     console.log(data.message.result.translatedText);
-    return data.message.result.translatedText;
+    return data.message.result.translatedText.replaceAll(/ |\./gi, "");
   } catch (e) {
-    console.log(e);
+    console.log("error");
     return "";
   }
 };
@@ -213,10 +223,14 @@ export const getStaticProps: GetStaticProps = async () => {
       query: GET_COUNTRIES,
     });
 
-    const translateCountries = countries.map((country) => ({
-      code: country.code,
-      name: translate(country.name),
-    }));
+    const translateCountries = await Promise.all(
+      countries.map(async (country) => ({
+        code: country.code,
+        name: await translate(country.name),
+      }))
+    );
+
+    console.log(translateCountries);
 
     return {
       props: {
