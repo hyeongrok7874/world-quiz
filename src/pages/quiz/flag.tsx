@@ -178,32 +178,32 @@ const GET_COUNTRIES = gql`
   }
 `;
 
-// const translate = async (country: string): Promise<string> => {
-//   try {
-//     const res = await axios.post(
-//       "https://openapi.naver.com/v1/papago/n2mt",
-//       {
-//         source: "en",
-//         target: "ko",
-//         text: country,
-//       },
-//       {
-//         headers: {
-//           "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-//           Accept: "*/*",
-//           "User-Agent": "curl/7.49.1",
-//           "X-Naver-Client-Id": process.env.NAVER_API_ID,
-//           "X-Naver-Client-Secret": process.env.NAVER_API_SECRET,
-//         },
-//       }
-//     );
-//     console.log(res.data.message.result.translatedText);
-//     return res.data.message.result.translatedText;
-//   } catch (e) {
-//     console.log(e);
-//     return "";
-//   }
-// };
+const translate = async (country: string): Promise<string> => {
+  try {
+    const { data } = await axios.post(
+      "https://openapi.naver.com/v1/papago/n2mt",
+      {
+        source: "en",
+        target: "ko",
+        text: country,
+      },
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          Accept: "*/*",
+          "User-Agent": "curl/7.49.1",
+          "X-Naver-Client-Id": process.env.NAVER_API_ID,
+          "X-Naver-Client-Secret": process.env.NAVER_API_SECRET,
+        },
+      }
+    );
+    console.log(data.message.result.translatedText);
+    return data.message.result.translatedText;
+  } catch (e) {
+    console.log(e);
+    return "";
+  }
+};
 
 export const getStaticProps: GetStaticProps = async () => {
   try {
@@ -213,12 +213,14 @@ export const getStaticProps: GetStaticProps = async () => {
       query: GET_COUNTRIES,
     });
 
+    const translateCountries = countries.map((country) => ({
+      code: country.code,
+      name: translate(country.name),
+    }));
+
     return {
       props: {
-        countries: countries.map((country) => ({
-          code: country.code,
-          name: country.name,
-        })),
+        countries: translateCountries,
       },
     };
   } catch (e) {
