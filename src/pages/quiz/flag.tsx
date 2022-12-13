@@ -207,8 +207,7 @@ const translate = async (country: string): Promise<string> => {
         },
       }
     );
-    console.log(data.message.result.translatedText);
-    return data.message.result.translatedText.replaceAll(/ |\./gi, "");
+    return data.message.result.translatedText.trim().replaceAll(".", "");
   } catch (e) {
     console.log("error");
     return "";
@@ -226,11 +225,12 @@ export const getStaticProps: GetStaticProps = async () => {
     const translateCountries = await Promise.all(
       countries.map(async (country) => ({
         code: country.code,
-        name: await translate(country.name),
+        name:
+          process.env.NODE_ENV === "production"
+            ? await translate(country.name)
+            : country.name,
       }))
     );
-
-    console.log(translateCountries);
 
     return {
       props: {
