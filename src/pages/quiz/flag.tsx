@@ -4,6 +4,7 @@ import { AnswerButton, Helmet, Quit } from "components";
 import { GetStaticProps, NextPage } from "next";
 import { useEffect, useState } from "react";
 import client from "utils/client";
+import axios from "axios";
 
 interface dataType {
   data: {
@@ -177,6 +178,33 @@ const GET_COUNTRIES = gql`
   }
 `;
 
+const translate = async (country: string): Promise<string> => {
+  try {
+    const res = await axios.post(
+      "https://openapi.naver.com/v1/papago/n2mt",
+      {
+        source: "en",
+        target: "ko",
+        text: country,
+      },
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          Accept: "*/*",
+          "User-Agent": "curl/7.49.1",
+          "X-Naver-Client-Id": process.env.NAVER_API_ID,
+          "X-Naver-Client-Secret": process.env.NAVER_API_SECRET,
+        },
+      }
+    );
+    console.log(res.data.message.result.translatedText);
+    return res.data.message.result.translatedText;
+  } catch (e) {
+    console.log(e);
+    return "";
+  }
+};
+
 export const getStaticProps: GetStaticProps = async () => {
   try {
     const {
@@ -189,7 +217,7 @@ export const getStaticProps: GetStaticProps = async () => {
       props: {
         countries: countries.map((country) => ({
           code: country.code,
-          name: country.name,
+          name: translate(country.name),
         })),
       },
     };
