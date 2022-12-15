@@ -129,6 +129,7 @@ const Flag: NextPage<FlagType> = ({ countries }) => {
           <Heading
             color="#8675A9"
             mb="30px"
+            fontFamily={`'twayair', sans-serif`}
             css={{
               "@media (max-width: 400px)": {
                 fontSize: "25px",
