@@ -2,4 +2,4 @@
 
 For the best score!
 
-![world-quiz](./img/world-quiz.png)
+<img src="./img/world-quiz.png" width="300px" />
