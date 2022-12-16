@@ -90,7 +90,6 @@ const Flag: NextPage<FlagType> = ({ countries }) => {
           justifyContent="center"
           flexDir="column"
           position="relative"
-          overflowY="scroll"
           css={{
             "@media (max-width: 600px": {
               width: "100%",
