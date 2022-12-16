@@ -90,6 +90,7 @@ const Flag: NextPage<FlagType> = ({ countries }) => {
           justifyContent="center"
           flexDir="column"
           position="relative"
+          overflowY="scroll"
           css={{
             "@media (max-width: 600px": {
               width: "100%",
@@ -128,6 +129,7 @@ const Flag: NextPage<FlagType> = ({ countries }) => {
           </Text>
           <Heading
             color="#8675A9"
+            mt="50px"
             mb="30px"
             fontFamily={`'twayair', sans-serif`}
             css={{
@@ -144,11 +146,15 @@ const Flag: NextPage<FlagType> = ({ countries }) => {
           {answer ? (
             <Image
               width="400px"
+              mb="20px"
               alt="flag"
               src={`https://flagcdn.com/${answer?.code.toLowerCase()}.svg`}
               css={{
                 "@media (max-width: 600px)": {
                   width: "85%",
+                },
+                "@media (max-height: 800px)": {
+                  width: "300px",
                 },
               }}
             />
